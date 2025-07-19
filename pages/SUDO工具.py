@@ -26,6 +26,7 @@ st.markdown("""
    - 每次根据反应结果选择下一根刺激丝：
      - **阳性 → 更轻的纤维丝**
      - **阴性 → 更重的纤维丝**  
+     
 共 **测量6次** ，若 **连续出现4次阳性（1111），或5次阴性（00000）** ，即停止测量
      
 参考文献：Bonin RP, Bories C, De Koninck Y. A simplified up-down method (SUDO) for measuring mechanical nociception in rodents using von Frey filaments. Mol Pain. 2014 Apr 16;10:26. doi: 10.1186/1744-8069-10-26. 
