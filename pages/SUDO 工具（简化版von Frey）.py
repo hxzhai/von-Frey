@@ -5,7 +5,7 @@ import pandas as pd
 # 加载修正后的 von Frey 对照表
 @st.cache_data
 def load_data():
-    df = pd.read_csv("von_frey_thresholds_corrected.csv", dtype={"Binary_Pattern": str})
+    df = pd.read_csv("../von_frey_thresholds_corrected.csv", dtype={"Binary_Pattern": str})
     return df
 
 df = load_data()
