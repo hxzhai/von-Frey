@@ -1,13 +1,5 @@
 import streamlit as st
-import os
 
-
-st.title("测试 pages.toml 是否同步到云端")
-st.write("pages.toml exists: ", os.path.exists('.streamlit/pages.toml'))
-
-if os.path.exists('.streamlit/pages.toml'):
-    with open('.streamlit/pages.toml', 'r', encoding='utf-8') as f:
-        st.code(f.read(), language='toml')
 st.set_page_config(page_title="von Frey 工具集", layout="wide")
 
 with st.sidebar:
