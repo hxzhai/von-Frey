@@ -21,7 +21,14 @@ st.markdown("""
 ⚠️ 请勿混用，以确保换算结果的科学性和可解释性。  
 参考文献：Bonin RP, Bories C, De Koninck Y. A simplified up-down method (SUDO) for measuring mechanical nociception in rodents using von Frey filaments. Mol Pain. 2014 Apr 16;10:26. doi: 10.1186/1744-8069-10-26. 
 """)
-st.markdown("反应序列如OOOOXO（由 0 表示阴性，1 表示阳性，即输入 **000010**），可单个或多个查询。")
+st.markdown("**记录反应序列（0/1）：**  
+            测试时从最小克数0.16g开始起测    
+   - 0 表示阴性反应（无缩足）
+   - 1 表示阳性反应（有缩足）
+   - 每次根据反应结果选择下一根刺激丝：
+     - **阳性 → 更轻的纤维丝**
+     - **阴性 → 更重的纤维丝**
+   （由 0 表示阴性，1 表示阳性，即输入 **000010**），可单个或多个查询。")
 
 input_text = st.text_area("请输入序列（每行一个）")
 
