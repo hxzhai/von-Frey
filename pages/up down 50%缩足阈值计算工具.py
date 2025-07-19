@@ -14,7 +14,7 @@ st.title("🐭 Von Frey 50% 缩足阈值计算工具")
 # ----------------------------
 try:
     code_df = pd.read_csv("编号表.txt", sep="\t")
-    k_df = pd.read_csv("../k值表.txt", sep="\t", dtype={"测量结果": str})  # 保留前导 0
+    k_df = pd.read_csv("k值表.txt", sep="\t", dtype={"测量结果": str})  # 保留前导 0
 except Exception as e:
     st.error("❌ 无法读取编号表或 k 值表，请确保文件放在项目根目录。")
     st.stop()
