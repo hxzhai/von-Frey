@@ -1,13 +1,17 @@
-# Home.py
 
 import streamlit as st
 
-st.title("🐭 Von Frey 工具合集")
+st.set_page_config(page_title="von Frey 工具集", layout="wide")
+
+# 保留 sidebar 占位，避免切页时报错
+st.sidebar.empty()
+
+st.title("🐭 von Frey 工具集平台")
 st.markdown("""
-欢迎使用本应用。本平台包含两个功能工具：
+欢迎使用 von Frey 工具集，本平台集成了以下两个实用工具：
 
-- 🔹 **SUDO 工具**：适用于简化版五根丝快速测试
-- 🔹 **50%阈值计算工具**：适用于常规 up-down 法阈值换算
+1. 🔹 **SUDO 工具（简化版 von Frey）**：基于五根纤维丝的简化方法
+2. 🔹 **50% 缩足阈值计算工具**：基于传统 Up-Down 方法 + k 值表进行精确计算
 
-请从左侧选择要使用的功能。
+请点击左侧导航栏切换工具。
 """)
