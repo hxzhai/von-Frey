@@ -11,7 +11,7 @@ def load_data():
 df = load_data()
 df["Binary_Pattern"] = df["Binary_Pattern"].astype(str)
 
-st.title("von Frey 阈值查询工具")
+st.title("von Frey 阈值查询工具（SUDO）")
 
 st.markdown("""
 #### 使用说明：  
