@@ -4,11 +4,11 @@ name = "🏠 首页"
 icon = ""
 
 [[pages]]
-path = "pages/50_percent_threshold.py"
+path = "pages/50percentthreshold.py"
 name = "🔹 50% 缩足阈值计算工具（经典up-down法）"
 icon = ""
 
 [[pages]]
-path = "pages/sudo_lookup_tool.py"
+path = "pages/sudolookup_tool.py"
 name = "🔹 SUDO 工具（简化版 von Frey）"
 icon = ""
