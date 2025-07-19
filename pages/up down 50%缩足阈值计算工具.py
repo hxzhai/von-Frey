@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-
+import os
 # ----------------------------
 # 页面设置
 # ----------------------------
@@ -12,7 +12,13 @@ st.title("🐭 Von Frey 50% 缩足阈值计算工具")
 # ----------------------------
 # 读取数据
 # ----------------------------
-try:
+try:	
+# 获取当前脚本的上级目录
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 拼接文件路径
+code_path = os.path.join(parent_dir, "编号表.txt")
+k_path = os.path.join(parent_dir, "k值表.txt")
     code_df = pd.read_csv("编号表.txt", sep="\t")
     k_df = pd.read_csv("k值表.txt", sep="\t", dtype={"测量结果": str})  # 保留前导 0
 except Exception as e:
