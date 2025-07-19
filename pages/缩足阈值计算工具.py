@@ -101,7 +101,7 @@ with st.sidebar.expander("📐 方法原理与操作说明（点击展开）", e
 4.	可点击下载按钮导出为 CSV 文件保存
 
 ---
-参考文献：
+参考文献：  
 	「1」Chaplan SR, Bach FW, Pogrel JW, Chung JM, Yaksh TL. Quantitative assessment of tactile allodynia in the rat paw. J Neurosci Methods. 1994 Jul;53(1):55-63. doi: 10.1016/0165-0270(94)90144-9.  
 	「2」Dixon WJ. Efficient analysis of experimental observations. Annu Rev Pharmacol Toxicol. 1980;20:441-62. doi: 10.1146/annurev.pa.20.040180.002301.
 ---
