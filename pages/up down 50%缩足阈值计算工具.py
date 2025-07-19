@@ -2,10 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
-import streamlit as st
-import pandas as pd
-import numpy as np
-import os
 
 # ----------------------------
 # 页面设置
@@ -25,8 +21,8 @@ try:
     root_dir = os.path.dirname(current_dir)
 
     # 文件路径
-    code_path = os.path.join(root_dir, "编号表.txt")
-    k_path = os.path.join(root_dir, "k值表.txt")
+    code_path = os.path.join(root_dir, "code_table.txt")
+    k_path = os.path.join(root_dir, "k_table.txt")
 
     # 加载数据
     code_df = pd.read_csv(code_path, sep="\t")
