@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
+import streamlit as st
+import pandas as pd
+import numpy as np
+import os
+
 # ----------------------------
 # 页面设置
 # ----------------------------
@@ -10,19 +15,24 @@ st.info("👉 请点击左上角的 '»»' 图标展开侧边栏，填写参数�
 st.title("🐭 Von Frey 50% 缩足阈值计算工具")
 
 # ----------------------------
-# 读取数据
+# 读取数据（使用安全路径）
 # ----------------------------
-try:	
-# 获取当前脚本的上级目录
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+try:
+    # 当前 .py 脚本的目录（pages/）
+    current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# 拼接文件路径
-code_path = os.path.join(parent_dir, "编号表.txt")
-k_path = os.path.join(parent_dir, "k值表.txt")
-    code_df = pd.read_csv("编号表.txt", sep="\t")
-    k_df = pd.read_csv("k值表.txt", sep="\t", dtype={"测量结果": str})  # 保留前导 0
+    # 上级目录（项目根目录）
+    root_dir = os.path.dirname(current_dir)
+
+    # 文件路径
+    code_path = os.path.join(root_dir, "编号表.txt")
+    k_path = os.path.join(root_dir, "k值表.txt")
+
+    # 加载数据
+    code_df = pd.read_csv(code_path, sep="\t")
+    k_df = pd.read_csv(k_path, sep="\t", dtype={"测量结果": str})
 except Exception as e:
-    st.error("❌ 无法读取编号表或 k 值表，请确保文件放在项目根目录。")
+    st.error(f"❌ 无法读取编号表或 k 值表，请检查文件路径是否正确。错误信息：{e}")
     st.stop()
 
 if '克数' not in code_df.columns or '序号' not in code_df.columns:
