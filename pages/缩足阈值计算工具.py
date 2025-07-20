@@ -144,38 +144,100 @@ if start:
     seq_list = [line.strip() for line in seq_input.strip().splitlines() if line.strip()]
     results = []
 
-for idx, seq in enumerate(seq_list, start=1):
-    seq_clean = ''.join(ch for ch in seq if ch in ['0', '1'])
-    restored_seq = seq_clean.replace("0", "O").replace("1", "X")
+    for idx, seq in enumerate(seq_list, start=1):
+        seq_clean = ''.join(ch for ch in seq if ch in ['0', '1'])
+        restored_seq = seq_clean.replace("0", "O").replace("1", "X")
 
-    cur_order = median_order
-    boundary_flag = None  # 记录是否越界
-    for ch in seq_clean[:-1]:  # 推断最后刺激丝
-        if ch == "0":
-            cur_order += 1
-        elif ch == "1":
-            cur_order -= 1
+        cur_order = median_order
+        boundary_flag = None  # 记录是否越界
+        for ch in seq_clean[:-1]:  # 推断最后刺激丝
+            if ch == "0":
+                cur_order += 1
+            elif ch == "1":
+                cur_order -= 1
 
-        # 判断是否超出范围，若超出，则停在边界，并标记
-        if cur_order > max_order:
-            cur_order = max_order
-            boundary_flag = "max"
-        elif cur_order < min_order:
-            cur_order = min_order
-            boundary_flag = "min"
+            # 判断是否超出范围，若超出，则停在边界，并标记
+            if cur_order > max_order:
+                cur_order = max_order
+                boundary_flag = "max"
+            elif cur_order < min_order:
+                cur_order = min_order
+                boundary_flag = "min"
 
-    # 查找实际最后刺激丝信息
-    row = code_df[code_df["序号"] == cur_order]
-    if row.empty:
-        results.append({"序号": idx, "反应序列": seq_clean, "错误": "找不到对应序号"})
-        continue
+        # 查找实际最后刺激丝信息
+        row = code_df[code_df["序号"] == cur_order]
+        if row.empty:
+            results.append({"序号": idx, "反应序列": seq_clean, "错误": "找不到对应序号"})
+            continue
 
-    xf = row["编号"].values[0]
-    final_weight = row["克数"].values[0]
+        xf = row["编号"].values[0]
+        final_weight = row["克数"].values[0]
 
-    # 判断是否需要按极值输出
-    if boundary_flag == "max":
-        threshold_g = max_weight  # 用最大克重阈值
+        # 判断是否需要按极值输出
+        if boundary_flag == "max":
+            threshold_g = max_weight  # 用最大克重阈值
+            results.append({
+                "序号": idx,
+                "反应序列": seq_clean,
+                "序列还原": restored_seq,
+                "所选克重范围": f"{min_weight}g - {max_weight}g",
+                "最后刺激丝克重": final_weight,
+                "Xf": round(xf, 3),
+                "k 值": None,
+                "δ": round(delta, 4),
+                "50% 缩足阈值（克）": threshold_g,
+                "备注": "已达到最大克重限制"
+            })
+            continue
+        elif boundary_flag == "min":
+            threshold_g = min_weight
+            results.append({
+                "序号": idx,
+                "反应序列": seq_clean,
+                "序列还原": restored_seq,
+                "所选克重范围": f"{min_weight}g - {max_weight}g",
+                "最后刺激丝克重": final_weight,
+                "Xf": round(xf, 3),
+                "k 值": None,
+                "δ": round(delta, 4),
+                "50% 缩足阈值（克）": threshold_g,
+                "备注": "已达到最小克重限制"
+            })
+            continue
+
+        # 判断是否全0或全1，并刚好到边界
+        if (seq_clean.count("0") == len(seq_clean) and cur_order == max_order) or \
+           (seq_clean.count("1") == len(seq_clean) and cur_order == min_order):
+            threshold_g = final_weight  # 或直接用max/min_weight
+            note = "连续全阴性，输出最大阈值" if cur_order == max_order else "连续全阳性，输出最小阈值"
+            results.append({
+                "序号": idx,
+                "反应序列": seq_clean,
+                "序列还原": restored_seq,
+                "所选克重范围": f"{min_weight}g - {max_weight}g",
+                "最后刺激丝克重": final_weight,
+                "Xf": round(xf, 3),
+                "k 值": None,
+                "δ": round(delta, 4),
+                "50% 缩足阈值（克）": threshold_g,
+                "备注": note
+            })
+            continue
+
+        # 正常k值匹配与计算
+        if not k_df["测量结果"].isin([seq_clean]).any():
+            results.append({"序号": idx, "反应序列": seq_clean, "错误": "k 值表中未找到该序列"})
+            continue
+
+        try:
+            k_val = float(k_df.loc[k_df["测量结果"] == seq_clean, "k值"].values[0])
+        except:
+            results.append({"序号": idx, "反应序列": seq_clean, "错误": "k 值无法转换为数值"})
+            continue
+
+        threshold_log = xf + k_val * delta
+        threshold_g = 10 ** threshold_log / 10000
+
         results.append({
             "序号": idx,
             "反应序列": seq_clean,
@@ -183,73 +245,11 @@ for idx, seq in enumerate(seq_list, start=1):
             "所选克重范围": f"{min_weight}g - {max_weight}g",
             "最后刺激丝克重": final_weight,
             "Xf": round(xf, 3),
-            "k 值": None,
+            "k 值": k_val,
             "δ": round(delta, 4),
-            "50% 缩足阈值（克）": threshold_g,
-            "备注": "已达到最大克重限制"
+            "50% 缩足阈值（克）": round(threshold_g, 4),
+            "备注": ""
         })
-        continue
-    elif boundary_flag == "min":
-        threshold_g = min_weight
-        results.append({
-            "序号": idx,
-            "反应序列": seq_clean,
-            "序列还原": restored_seq,
-            "所选克重范围": f"{min_weight}g - {max_weight}g",
-            "最后刺激丝克重": final_weight,
-            "Xf": round(xf, 3),
-            "k 值": None,
-            "δ": round(delta, 4),
-            "50% 缩足阈值（克）": threshold_g,
-            "备注": "已达到最小克重限制"
-        })
-        continue
-
-    # 判断是否全0或全1，并刚好到边界
-    if (seq_clean.count("0") == len(seq_clean) and cur_order == max_order) or \
-       (seq_clean.count("1") == len(seq_clean) and cur_order == min_order):
-        threshold_g = final_weight  # 或直接用max/min_weight
-        note = "连续全阴性，输出最大阈值" if cur_order == max_order else "连续全阳性，输出最小阈值"
-        results.append({
-            "序号": idx,
-            "反应序列": seq_clean,
-            "序列还原": restored_seq,
-            "所选克重范围": f"{min_weight}g - {max_weight}g",
-            "最后刺激丝克重": final_weight,
-            "Xf": round(xf, 3),
-            "k 值": None,
-            "δ": round(delta, 4),
-            "50% 缩足阈值（克）": threshold_g,
-            "备注": note
-        })
-        continue
-
-    # 正常k值匹配与计算
-    if not k_df["测量结果"].isin([seq_clean]).any():
-        results.append({"序号": idx, "反应序列": seq_clean, "错误": "k 值表中未找到该序列"})
-        continue
-
-    try:
-        k_val = float(k_df.loc[k_df["测量结果"] == seq_clean, "k值"].values[0])
-    except:
-        results.append({"序号": idx, "反应序列": seq_clean, "错误": "k 值无法转换为数值"})
-        continue
-
-    threshold_log = xf + k_val * delta
-    threshold_g = 10 ** threshold_log / 10000
-
-    results.append({
-        "序号": idx,
-        "反应序列": seq_clean,
-        "序列还原": restored_seq,
-        "所选克重范围": f"{min_weight}g - {max_weight}g",
-        "最后刺激丝克重": final_weight,
-        "Xf": round(xf, 3),
-        "k 值": k_val,
-        "δ": round(delta, 4),
-        "50% 缩足阈值（克）": round(threshold_g, 4),
-        "备注": ""
-    })
 
     df_result = pd.DataFrame(results)
     st.dataframe(df_result, use_container_width=True)
