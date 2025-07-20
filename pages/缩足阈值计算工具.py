@@ -144,7 +144,7 @@ if start:
     seq_list = [line.strip() for line in seq_input.strip().splitlines() if line.strip()]
     results = []
 
-    for idx, seq in enumerate(seq_list, start=1):
+for idx, seq in enumerate(seq_list, start=1):
     seq_clean = ''.join(ch for ch in seq if ch in ['0', '1'])
     restored_seq = seq_clean.replace("0", "O").replace("1", "X")
 
