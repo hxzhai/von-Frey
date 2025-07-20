@@ -1,6 +1,7 @@
 import streamlit as st
 
 st.set_page_config(page_title="von Frey 工具集", layout="wide")
+st.info("👉 请点击 **左上角'»'** 图标展开侧边栏,选择功能页面开始使用。")
 
 with st.sidebar:
     st.info("🧪 请选择左侧页面进入不同工具模块。")
