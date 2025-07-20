@@ -186,7 +186,7 @@ if start:
                 "k 值": None,
                 "δ": round(delta, 4),
                 "50% 缩足阈值（克）": threshold_g,
-                "备注": "已达到最大克重限制"
+                "备注": "已超出最大克重限制"
             })
             continue
         elif boundary_flag == "min":
@@ -201,7 +201,7 @@ if start:
                 "k 值": None,
                 "δ": round(delta, 4),
                 "50% 缩足阈值（克）": threshold_g,
-                "备注": "已达到最小克重限制"
+                "备注": "已超出最小克重限制"
             })
             continue
 
